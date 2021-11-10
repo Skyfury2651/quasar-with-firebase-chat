@@ -13,11 +13,21 @@
         </q-toolbar-title>
 
         <q-btn
+          v-if="!userDetails.userId"
           dense flat no-caps
           class="absolute-right q-pr-sm"
           icon="account_circle"
           label="Login"
+          to="/auth"
         />
+        <q-btn
+          v-else
+          @click="logoutUser"
+          dense flat no-caps
+          class="absolute-right q-pr-sm"
+          icon="account_circle">
+          Logout<br>{{ userDetails.name }}
+        </q-btn>
       </q-toolbar>
     </q-header>
 
@@ -30,16 +40,20 @@
 <script>
 import {defineComponent, ref} from 'vue'
 import {openURL} from 'quasar'
+import {mapActions, mapState} from "vuex";
+import mixinOtherUserDetails from 'src/mixins/mixin-other-user-details.js'
 
 export default defineComponent({
-  name: 'MainLayout',
+  mixins: [mixinOtherUserDetails],
   computed: {
+    ...mapState("user", ['userDetails']),
     title() {
       let currentPath = this.$route.fullPath;
       let title = 'Smack chat'
+      console.log(currentPath)
       switch (currentPath) {
         case '/chat':
-          title = 'Chat'
+          title = this.otherUserDetails.name
           break
         case '/auth':
           title = 'Auth'
@@ -48,6 +62,10 @@ export default defineComponent({
           title = 'Smack chat'
           break
       }
+      if (currentPath.includes('/chat')){
+        title = this.otherUserDetails.name
+      }
+
       return title
     }
   },
@@ -61,7 +79,15 @@ export default defineComponent({
     }
   },
   methods: {
-    openURL
+    ...mapActions('user', ['logoutUser'])
   }
 })
 </script>
+
+<style lang="scss">
+.q-toolbar {
+  q-btn {
+    line-height: 1.2;
+  }
+}
+</style>

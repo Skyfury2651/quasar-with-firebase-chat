@@ -5,13 +5,13 @@
     <q-input outlined class="q-mb-md" v-model="formData.password" type="password" label="Password"></q-input>
     <div class="row">
       <q-space></q-space>
-      <q-btn color="primary" :label="tab"></q-btn>
+      <q-btn color="primary" :label="tab" type="submit"></q-btn>
     </div>
   </q-form>
 </template>
 
 <script>
-// import firebase from "boot/firebase";
+import {mapActions} from 'vuex'
 
 export default {
   props: ['tab'],
@@ -25,27 +25,15 @@ export default {
     }
   },
   methods: {
+    ...mapActions('user', ['registerUser','loginUser']),
     submitForm() {
       if (this.tab === 'login') {
-        console.log('login the user')
+        this.loginUser(this.formData)
       } else {
-        console.log('register the user')
+        this.registerUser(this.formData)
       }
     },
-    // google() {
-    //   const provider = new firebase.auth.GoogleAuthProvider()
-    //   firebase.auth().signInWithPopup(provider)
-    //     .then(result => {
-    //       console.log('result', result)
-    //       this.$q.notify({message: 'Sign In Success.'})
-    //       this.$router.push('/home')
-    //     })
-    //     .catch(error => console.log('error', error))
-    // }
   },
-  // mounted() {
-  //  this.google()
-  // }
 }
 </script>
 

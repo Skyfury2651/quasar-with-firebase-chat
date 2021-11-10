@@ -3,10 +3,9 @@
     <q-toolbar class="bg-primary text-white shadow-2">
       <q-toolbar-title>Contacts</q-toolbar-title>
     </q-toolbar>
-
     <q-list class="full-width" separator bordered>
-      <q-item v-for="user in users" :key="user.id" clickable v-ripple to="/chat">
-      <q-item-section avatar>
+      <q-item v-for="(user,key) in users" :key="key" clickable v-ripple :to="'/chat/' + key">
+        <q-item-section avatar>
           <q-avatar color="primary" text-color="white">
             {{ user.name.charAt(0) }}
           </q-avatar>
@@ -26,27 +25,11 @@
   </div>
 </template>
 <script>
+import {mapGetters} from 'vuex'
+
 export default {
-  setup() {
-    return {
-      users: [
-        {
-          id: 1,
-          name: 'Ruddy Jedrzej',
-          online: true,
-        },
-        {
-          id: 2,
-          name: 'Mallorie Alessandrini',
-          online: false
-        },
-        {
-          id: 3,
-          name: 'Elisabetta Wicklen',
-          online: true
-        }
-      ]
-    }
+  computed: {
+    ...mapGetters('user', ['users'])
   }
 }
 </script>
